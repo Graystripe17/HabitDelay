@@ -29,6 +29,8 @@
             android:name=".CountdownActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_countdown"
+            android:launchMode="singleTop"
+            android:allowTaskReparenting="true"
             android:theme="@style/FullscreenTheme"></activity>
     </application>
 

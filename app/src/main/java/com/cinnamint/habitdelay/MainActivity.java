@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,10 +22,12 @@ public class MainActivity extends AppCompatActivity {
 
     Context c;
     static String mostRecentApp;
+    public String DEBUG = "DEBUG";
 
     void requestUsageStatsPermission() {
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
                 && !hasUsageStatsPermission(this)) {
+            Toast.makeText(c, "Habit Delay needs Usage Access permissions", Toast.LENGTH_LONG).show();
             startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
         }
     }
@@ -59,9 +62,8 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(c, "Youtube Opened", Toast.LENGTH_LONG).show();
                             mostRecentApp = "youtube";
 
-                            Intent cd = new Intent(c, CountdownActivity.class);
-                            cd.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                            startActivity(cd);
+                            openTimer();
+
                         }
                     }
                 }
@@ -69,21 +71,23 @@ public class MainActivity extends AppCompatActivity {
             .when("com.snapchat.android", new AppChecker.Listener() {
                     @Override
                     public void onForeground(String packageName) {
-                        // do something when com.my.app is in the foreground
+                        Toast.makeText(c, "Snapchat Opened", Toast.LENGTH_LONG).show();
                     }
                 }
             )
             .when("com.android.camera", new AppChecker.Listener() {
                         @Override
                         public void onForeground(String packageName) {
-                            if (!mostRecentApp.equals("camera")) {
-                                Toast.makeText(c, "Camera Opened", Toast.LENGTH_LONG).show();
+                            Toast.makeText(c, "Camera Opened", Toast.LENGTH_LONG).show();
+
+                            if (!mostRecentApp.equals("camera") && !mostRecentApp.equals("camera_not_completed")) {
                                 mostRecentApp = "camera_not_completed";
 
+                                Log.d(DEBUG, mostRecentApp);
 
-                                Intent cd = new Intent(c, CountdownActivity.class);
-                                cd.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                                startActivity(cd);
+                                openTimer();
+                            } else {
+                                Log.d(DEBUG, mostRecentApp);
                             }
                         }
                     }
@@ -92,12 +96,20 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onForeground(String packageName) {
                         mostRecentApp = "none";
+                        Log.d(DEBUG, mostRecentApp);
                     }
                 }
             )
         .timeout(1000)
         .start(this);
 
+    }
+
+    public void openTimer() {
+        Intent cd = new Intent(c, CountdownActivity.class);
+        // cd.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(cd);
+        finish();
     }
 
 }

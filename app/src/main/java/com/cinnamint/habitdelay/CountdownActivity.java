@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -13,6 +14,9 @@ import android.view.View;
  * status bar and navigation/system bar) with user interaction.
  */
 public class CountdownActivity extends AppCompatActivity {
+
+    public String DEBUG = "DEBUG";
+
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -107,8 +111,10 @@ public class CountdownActivity extends AppCompatActivity {
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
+        Log.d(DEBUG, "CountdownActivity");
+
         try {
-            Thread.sleep(3000);
+            Thread.sleep(6000);
             MainActivity.mostRecentApp = "camera";
             timerDoneBackPressed();
         } catch (InterruptedException e) {
@@ -177,6 +183,7 @@ public class CountdownActivity extends AppCompatActivity {
     }
 
     public void timerDoneBackPressed() {
+        Log.d(DEBUG, "TimerDoneBackPressed");
         super.onBackPressed();
     }
 }
